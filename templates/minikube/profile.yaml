@@ -23,8 +23,8 @@ devices:
     source: /dev/kmsg
     type: disk
   bootenable:
-    path: /boot/config-4.15.0-70-generic
-    source: /boot/config-4.15.0-70-generic
+    path: /boot/config-KERNEL_RELEASE
+    source: /boot/config-KERNEL_RELEASE
     type: disk
   modenable:
     path: /lib/modules

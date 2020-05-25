@@ -32,9 +32,11 @@ then
     exit 0
 fi
 
+kernel_release=`uname -r`
+echo "kernel: $kernel_release"
 echo "Creating the custom profile '$LXC_PROFILE_NAME'"
 lxc profile create $LXC_PROFILE_NAME
-cat $LXC_PROFILE_PATH | lxc profile edit $LXC_PROFILE_NAME
+cat $LXC_PROFILE_PATH | sed "s^KERNEL_RELEASE^$kernel_release^g" | lxc profile edit $LXC_PROFILE_NAME
 
 echo "Launching the new container '$LXC_CONTAINER' using the image '$LXC_IMAGE'"
 lxc launch $LXC_IMAGE $LXC_CONTAINER -p default -p $LXC_PROFILE_NAME -s $LXC_STORAGE

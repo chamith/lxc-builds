@@ -1,9 +1,12 @@
 #! /bin/bash
-LXC_CONTAINER=$1
+
 LXC_IMAGE=ubuntu:18.04
-LXC_PROFILE=minikube_new
-LXC_STORAGE=lxd-storage
+
 SCRIPT_PATH=`realpath $(dirname "$0")`
+BUILD_SCRIPTS=$SCRIPT_PATH/../../build_scripts
+LXC_CONTAINER=$1
+LXC_PROFILE_PATH=$SCRIPT_PATH/profile.yaml
+LXC_STORAGE=$2
 
 if [ ! -n "$LXC_CONTAINER" ]
 then
@@ -11,14 +14,17 @@ then
     exit 0
 fi
 
-echo "Creating the custom profile '$LXC_PROFILE'"
-lxc profile create $LXC_PROFILE
-cat $SCRIPT_PATH/profile.yaml | lxc profile edit $LXC_PROFILE
+if [ ! -n "$LXC_STORAGE" ]
+then
+    echo "please provide the storage name."
+    exit 0
+fi
 
-echo "Launching the new container '$LXC_CONTAINER' using the image '$LXC_IMAGE'"
-lxc launch $LXC_IMAGE $LXC_CONTAINER -p default -p $LXC_PROFILE -s $LXC_STORAGE
+$BUILD_SCRIPTS/create-container.sh $LXC_CONTAINER $LXC_IMAGE $LXC_PROFILE_PATH $LXC_STORAGE
 
 sleep 5
 
 echo "Setting up the new container with required software"
-cat $SCRIPT_PATH/__build_steps__ | lxc exec $LXC_CONTAINER bash -
+cat $BUILD_SCRIPTS/dev-generic.sh | lxc exec $LXC_CONTAINER bash -
+cat $BUILD_SCRIPTS/minikube.sh | lxc exec $LXC_CONTAINER bash -
+
