@@ -1,8 +1,8 @@
 #! /bin/bash
 
 ACTION=$1
-LXC_CONTAINER=$2
-API_SERVER_NAME=$LXC_CONTAINER.lxc
+LXC_CONTAINER=`basename "$0"`
+API_SERVER_NAME=$LXC_CONTAINER
 
 if [ ! -n "$LXC_CONTAINER" ]
 then
