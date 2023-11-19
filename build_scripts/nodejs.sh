@@ -1,5 +1,5 @@
 # Using Ubuntu
-NODE_MAJOR=18
+NODE_MAJOR=20
 
 apt-get update
 apt-get install -y ca-certificates curl gnupg
